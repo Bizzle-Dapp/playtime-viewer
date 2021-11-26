@@ -7,48 +7,42 @@ const GameStats = ({ games }) => {
     const [data, setData] = useState([]);
     const [hovered, setHovered] = useState(undefined);
 
-    
-
     useEffect(() => {
         setLoading(true);
         if (games && games.length > 0) {
-            processGamesToStats(games);
+            (function (){
+                const processedStats = {
+                    LessOne: [],
+                    OneToFive: [],
+                    FiveToTwenty: [],
+                    TwentyToHundred: [],
+                    HundredToFiveHundred: [],
+                    FiveHundredPlus: []
+                }
+        
+                games.forEach(game => {
+                    if ((Number(game.playtime_forever) / 60) < 1) {
+                        processedStats.LessOne.push(game);
+                    } else if ((Number(game.playtime_forever) / 60) < 5) {
+                        processedStats.OneToFive.push(game);
+                    } else if ((Number(game.playtime_forever) / 60) < 20) {
+                        processedStats.FiveToTwenty.push(game);
+                    } else if ((Number(game.playtime_forever) / 60) < 100) {
+                        processedStats.TwentyToHundred.push(game);
+                    } else if ((Number(game.playtime_forever) / 60) < 500) {
+                        processedStats.HundredToFiveHundred.push(game);
+                    } else {
+                        processedStats.FiveHundredPlus.push(game);
+                    }
+                });
+                setStats(processedStats);
+            })();
             setLoading(false);
         }
     }, [games]);
 
-    const processGamesToStats = () => {
-        const processedStats = {
-            LessOne: [],
-            OneToFive: [],
-            FiveToTwenty: [],
-            TwentyToHundred: [],
-            HundredToFiveHundred: [],
-            FiveHundredPlus: []
-        }
-
-        games.forEach(game => {
-            if ((Number(game.playtime_forever) / 60) < 1) {
-                processedStats.LessOne.push(game);
-            } else if ((Number(game.playtime_forever) / 60) < 5) {
-                processedStats.OneToFive.push(game);
-            } else if ((Number(game.playtime_forever) / 60) < 20) {
-                processedStats.FiveToTwenty.push(game);
-            } else if ((Number(game.playtime_forever) / 60) < 100) {
-                processedStats.TwentyToHundred.push(game);
-            } else if ((Number(game.playtime_forever) / 60) < 500) {
-                processedStats.HundredToFiveHundred.push(game);
-            } else {
-                processedStats.FiveHundredPlus.push(game);
-            }
-        });
-        setStats(processedStats);
-    }
-
-
     const segmentClick = (e, index) => {
         console.log('Segment:', stats[Object.keys(stats)[index]]);
-
     }
 
     useEffect(() => {
@@ -87,18 +81,6 @@ const GameStats = ({ games }) => {
             ]);
         }
     }, [stats, hovered])
-
-    // useEffect(() => {
-    //     setData(data.map((entry, i) => {
-    //         if (hovered === i) {
-    //           return {
-    //             ...entry,
-    //             color: 'grey',
-    //           };
-    //         }
-    //         return entry;
-    //       }));
-    // }, [hovered])
 
     const conditionalRender = () => {
         if (loading) {

@@ -1,25 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import GameStats from './GameStats';
-
-/*
-Props:
-avatar: string url
-avatarfull: string url
-avatarhash: string
-avatarmedium: string url
-communityvisibilitystate: number
-lastlogoff: timestamp
-loccountrycode: string (countrycode)
-personaname: string
-personastate: number
-personastateflags: number
-primaryclanid: string
-profilestate: number
-profileurl: string url
-steamid: string
-timecreated: timestamp
-*/
-
 
 const UserViewer = ({playerData}) => {
     const {
@@ -31,10 +11,6 @@ const UserViewer = ({playerData}) => {
     const {
         games
     } = playerData;
-
-    // useEffect(() => {
-    //     console.log(playerData);
-    // }, [playerData]);
 
     return (
         <>
