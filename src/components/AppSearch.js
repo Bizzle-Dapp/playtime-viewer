@@ -3,10 +3,11 @@ import useFetchUserData from '../hooks/useFetchUserData';
 
 const AppSearch = (props) => {
     const { steamService, setPlayerData, setError } = props;
-
     const [idInput, setIdInput] = useState('')
     const [searchHistory, setSearchHistory] = useState([]);
     const [useVanity, setUseVanity] = useState(true);
+    const [loading, setLoading] = useState(false);
+
 
     const userSearcher = useFetchUserData(steamService);
 
@@ -17,6 +18,7 @@ const AppSearch = (props) => {
     }, [])
 
     const SearchWithId = async () => {
+        setLoading(true);
         if (!idInput) return;
         if (idInput && idInput.length < 1) return;
         let storeHistory
@@ -36,6 +38,7 @@ const AppSearch = (props) => {
             setError(undefined);
             setPlayerData(userData);
         }
+        setLoading(false);
     }
 
     return (
@@ -45,7 +48,7 @@ const AppSearch = (props) => {
                 onChange={(e) => { setIdInput(e.target.value); }}>
                 <option value="" disabled>Search History</option>
                 {searchHistory.map((history) => {
-                    return <option value={history}>{history}</option>
+                    return <option key={history} value={history}>{history}</option>
                 })
                 }
             </select>
@@ -64,7 +67,7 @@ const AppSearch = (props) => {
             
             <div className="Help-Icon tooltip">
                 ?
-                <span class="tooltiptext">
+                <span className="tooltiptext">
                     {useVanity && 
                     <>
                         This is name found at the end of your steam profile url.<br/>
@@ -86,9 +89,11 @@ const AppSearch = (props) => {
             checked={useVanity} 
             onChange={() => {setUseVanity(!useVanity)}}
             name="Use Vanity Name"/>
-            <label for="Use Vanity Name">Use Vanity Name</label>
+            <label htmlFor="Use Vanity Name">Use Vanity Name</label>
             </span>
             <button onClick={() => { /* Run Search with ID */ SearchWithId(); }}>Search</button>
+            
+            {loading && <div className="Screen-Overlay"/>}
         </>
     )
 }

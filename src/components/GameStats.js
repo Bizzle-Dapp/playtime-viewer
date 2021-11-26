@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
+import InfoFlyout from './InfoFlyout';
 
 const GameStats = ({ games }) => {
     const [stats, setStats] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [hovered, setHovered] = useState(undefined);
+    const [infoSlide, setInfoSlide] = useState({
+        title: '',
+        games: [],
+        isOpen: false
+    })
 
     useEffect(() => {
         setLoading(true);
@@ -42,7 +48,21 @@ const GameStats = ({ games }) => {
     }, [games]);
 
     const segmentClick = (e, index) => {
+        console.log(e.target.textContent)
         console.log('Segment:', stats[Object.keys(stats)[index]]);
+        setInfoSlide({
+            title: e.target.textContent,
+            games: stats[Object.keys(stats)[index]],
+            isOpen: true
+        })
+    }
+
+    const clearSegmentClick = () => {
+        setInfoSlide({
+            title: '',
+            games: [],
+            isOpen: false
+        })
     }
 
     useEffect(() => {
@@ -96,8 +116,8 @@ const GameStats = ({ games }) => {
                     <p>Total Games: {games.length}</p>
                     <PieChart
                         className="Pie-Chart"
-                        lineWidth={60}
-                        paddingAngle={3}
+                        lineWidth={40}
+                        paddingAngle={1}
                         label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
                         labelStyle={{
                             fontSize: '0.25rem',
@@ -129,6 +149,7 @@ const GameStats = ({ games }) => {
                                 <div
                                     className="Pie-Chart-Key-Entry"
                                     style={{ background: d.color }}
+                                    key={d.title}
                                 >
                                     {d.title}
                                 </div>
@@ -136,6 +157,10 @@ const GameStats = ({ games }) => {
                         })}
                     </div>
                     <br />
+                    <InfoFlyout title={infoSlide.title} 
+                        games={infoSlide.games}
+                        isOpen={infoSlide.isOpen}
+                        close={() => clearSegmentClick()} />
                 </>
             )
         }
