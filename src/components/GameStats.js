@@ -5,9 +5,9 @@ const GameStats = ({ games }) => {
     const [stats, setStats] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    useEffect(() => {
-        console.log(games)
-    }, [games])
+    // useEffect(() => {
+    //     console.log(games)
+    // }, [games])
 
     useEffect(() => {
         setLoading(true);
@@ -28,7 +28,6 @@ const GameStats = ({ games }) => {
         }
 
         games.forEach(game => {
-            console.log(game);
             if ((Number(game.playtime_forever) / 60) < 1) {
                 processedStats.LessOne.push(game);
             } else if ((Number(game.playtime_forever) / 60) < 5) {
@@ -43,10 +42,13 @@ const GameStats = ({ games }) => {
                 processedStats.FiveHundredPlus.push(game);
             }
         });
-        console.log(processedStats)
         setStats(processedStats);
     }
 
+
+    const segmentClick = (e) => {
+        console.log(e.target.value)
+    }
 
     useEffect(() => {
         if (stats) {
@@ -111,6 +113,9 @@ const GameStats = ({ games }) => {
                         labelPosition={90}
                         data={data}
                         animate
+                        onClick={(event, index) => {
+                            console.log('Segment:', stats[Object.keys(stats)[index]]);
+                          }}
                     />
                     <br />
                     <div className="Pie-Chart-Key">
